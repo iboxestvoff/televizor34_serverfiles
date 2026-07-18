@@ -1,0 +1,40 @@
+name: Update EPG
+
+# Запускается каждую ночь в 03:00 UTC, плюс можно запустить руками
+# вкладке Actions -> Update EPG -> Run workflow.
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-epg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Скачать свежий EPG
+        run: |
+          curl -L --fail --retry 3 --max-time 900 \
+            -o epg.xml https://iptvx.one/EPG_NOARCH
+
+      - name: Проверить размер файла
+        run: |
+          SIZE=$(stat -c%s epg.xml)
+          echo "Размер EPG: $SIZE байт"
+          if [ "$SIZE" -gt 95000000 ]; then
+            echo "::warning::Файл больше ~95 МБ — лимит GitHub на один файл без Git LFS — 100 МБ. Публикация может не пройти."
+          fi
+
+      - name: Опубликовать в ветку epg-data (без раздувания истории)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan epg-data
+          git rm -rf . --quiet || true
+          git add epg.xml
+          git commit -m "EPG update $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push --force origin epg-data
