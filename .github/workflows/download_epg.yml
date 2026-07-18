@@ -1,0 +1,37 @@
+name: Televizor 34 EPG
+
+on:
+  schedule:
+    # Запуск каждый день в 00:00 по UTC (можно настроить любое время)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Позволяет запускать задачу вручную через вкладку Actions
+
+jobs:
+  download-epg:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Шаг 1: Проверяем и скачиваем код репозитория
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Шаг 2: Создаем папку epg (если её нет) и скачиваем файл
+    - name: Download EPG file
+      run: |
+        mkdir -p epg
+        curl -L -o epg/epg.xml.gz "https://iptvx.one/epg/epg.xml.gz"
+
+    # Шаг 3: Сохраняем файл в репозиторий, если он изменился
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add epg/epg.xml.gz
+        
+        # Проверяем, есть ли изменения, чтобы не создавать пустые коммиты
+        if git diff --staged --quiet; then
+          echo "Файл не изменился, коммит не требуется."
+        else
+          git commit -m "Обновление EPG: $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
+        fi
