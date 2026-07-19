@@ -1,27 +1,27 @@
 #EXTM3U url-tvg="https://raw.githubusercontent.com/iboxestvoff/iboxestv.playlist.tv/epg-data/epg.xml"
 
-#EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/b221e268-f5e5-459f-9b10-81abb7b1afd1?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные", Первый канал
+#EXTINF:-1 tvg-logo="https://static.kion.ru/tv/channels/images/formats/BACKGROUND_PICTURE_3220519169cd34933be291ed2bf30eae.png?x=520&y=288&ar=keepй" group-title="Общественные", Первый канал
 https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R03_1TV_VLGOB/variant.m3u8
 
-#EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/9389a63e-fab3-454f-ab36-fb32d938b254?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные",Россия 1
+#EXTINF:-1 tvg-logo="https://static.kion.ru/tv/channels/images/formats/BACKGROUND_PICTURE_6aeb1801dafa088414bb8707ebacf145.png?x=520&y=288&ar=keep" group-title="Общественные",Россия 1
 https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R04_ROSSIA1_VLGOB/variant.m3u8
 
-#EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/14ffbddc-7be5-4598-8489-c352b7393a15?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные",Матч!
+#EXTINF:-1 tvg-logo="https://static.kion.ru/tv/channels/images/formats/BACKGROUND_PICTURE_f6ef581acbb40edb441ae27e2c441561.png?x=520&y=288&ar=keep" group-title="Общественные",Матч!
 https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R04_ROSSIA2_VLGOB/variant.m3u8
 
-#EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/0fa86f71-4781-4b8d-b46e-5a8c894bc8fa?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные",НТВ
+#EXTINF:-1 tvg-logo="https://static.kion.ru/tv/channels/images/formats/BACKGROUND_PICTURE_664eac7ca1caf522434b973f8b7090ae.png?x=520&y=288&ar=keep" group-title="Общественные",НТВ
 https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R03_NTV_VLGOB/variant.m3u8
 
-#EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/acdc50c1-0b43-4307-8c34-b0fe35b67996?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные",Пятый канал
+#EXTINF:-1 tvg-logo="https://static.kion.ru/tv/channels/images/formats/BACKGROUND_PICTURE_c5f513c779f52614d4c6bc04d6eef846.png?x=520&y=288&ar=keep" group-title="Общественные",Пятый канал
 https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R02_5TV_VLGOB/variant.m3u8
 
-#EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/335e7fa5-70ad-47a2-8f92-9d045f0b9d93?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные",Россия К
+#EXTINF:-1 tvg-logo="https://static.kion.ru/tv/channels/images/formats/BACKGROUND_PICTURE_2230c60f9fdd0f02e6999009c9a4390f.png?x=520&y=288&ar=keep" group-title="Общественные",Россия К
 https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R02_ROSSIAK_VLGOB/variant.m3u8
 
-#EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/335e7fa5-70ad-47a2-8f92-9d045f0b9d93?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные",Россия 24
+#EXTINF:-1 tvg-logo="https://static.kion.ru/tv/channels/images/formats/BACKGROUND_PICTURE_a5d70f8565a24489368d4d9503327dcd.png?x=520&y=288&ar=keep" group-title="Общественные",Россия 24
 https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R01_ROSSIA24_VLGOB/variant.m3u8
 
-#EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/dc414994-c75b-48f9-b267-ea7acac7214a?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные",Карусель
+#EXTINF:-1 tvg-logo="https://static.kion.ru/tv/channels/images/formats/BACKGROUND_PICTURE_a5d70f8565a24489368d4d9503327dcd.png?x=520&y=288&ar=keep" group-title="Общественные",Карусель
 https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R01_KARUSEL_VLGOB/variant.m3u8
 
 #EXTINF:-1 tvg-logo="https://static.okko.tv/images/v4/a9bc5e0f-2eff-4825-a139-798ee75cdbe6?presetId=1152&width=80&scale=2&quality=80&mediaType=webp" group-title="Общественные",ОТР
