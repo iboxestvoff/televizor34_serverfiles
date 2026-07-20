@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Шаг 1: Скачиваем твой репозиторий
+      # Шаг 1: Скачиваем твой репозиторий (вместе с файлом icon.png)
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -16,8 +16,28 @@ jobs:
         run: |
           mkdir -p app/src/main/java/ru/tv34/channels
           mkdir -p app/src/main/res/layout
+          mkdir -p app/src/main/res/mipmap-mdpi
+          mkdir -p app/src/main/res/mipmap-hdpi
+          mkdir -p app/src/main/res/mipmap-xhdpi
+          mkdir -p app/src/main/res/mipmap-xxhdpi
+          mkdir -p app/src/main/res/mipmap-xxxhdpi
 
-      # Шаг 3: Создаем AndroidManifest.xml
+      # Шаг 3: Обрабатываем и устанавливаем иконку (если она есть)
+      - name: Setup App Icon
+        run: |
+          if [ -f "icon.png" ]; then
+            sudo apt-get update && sudo apt-get install -y imagemagick
+            convert icon.png -resize 48x48 app/src/main/res/mipmap-mdpi/ic_launcher.png
+            convert icon.png -resize 72x72 app/src/main/res/mipmap-hdpi/ic_launcher.png
+            convert icon.png -resize 96x96 app/src/main/res/mipmap-xhdpi/ic_launcher.png
+            convert icon.png -resize 144x144 app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+            convert icon.png -resize 192x192 app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+            echo "Иконка успешно добавлена!"
+          else
+            echo "Файл icon.png не найден в корне репозитория. Будет использована стандартная заглушка."
+          fi
+
+      # Шаг 4: Создаем AndroidManifest.xml (теперь с указанием иконки android:icon)
       - name: Create Android Manifest
         run: |
           cat << 'EOF' > app/src/main/AndroidManifest.xml
@@ -26,6 +46,7 @@ jobs:
               <uses-permission android:name="android.permission.INTERNET" />
               <application
                   android:label="ТВ 34"
+                  android:icon="@mipmap/ic_launcher"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
                   android:usesCleartextTraffic="true">
                   <activity android:name=".MainActivity" android:exported="true">
@@ -38,7 +59,7 @@ jobs:
           </manifest>
           EOF
 
-      # Шаг 4: Создаем разметку экрана с WebView
+      # Шаг 5: Создаем разметку экрана с WebView
       - name: Create Layout
         run: |
           cat << 'EOF' > app/src/main/res/layout/activity_main.xml
@@ -48,7 +69,7 @@ jobs:
               android:layout_height="match_parent" />
           EOF
 
-      # Шаг 5: Пишем Java-код для загрузки ссылки телевизора
+      # Шаг 6: Пишем Java-код для загрузки ссылки телевизора
       - name: Create MainActivity.java
         run: |
           cat << 'EOF' > app/src/main/java/ru/tv34/channels/MainActivity.java
@@ -74,7 +95,7 @@ jobs:
           }
           EOF
 
-      # Шаг 6: Создаем конфигурационные файлы Gradle
+      # Шаг 7: Создаем конфигурационные файлы Gradle
       - name: Create Gradle Files
         run: |
           echo "include ':app'" > settings.gradle
@@ -106,21 +127,21 @@ jobs:
           }
           EOF
 
-      # Шаг 7: Настраиваем Java окружение
+      # Шаг 8: Настраиваем Java окружение
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Шаг 8: Собираем проект с помощью официального экшена Gradle (он сам скачает Gradle 8.5)
+      # Шаг 9: Собираем проект с помощью официального экшена Gradle
       - name: Setup and Run Gradle
         uses: eskatos/gradle-command-action@v2
         with:
           gradle-version: '8.5'
           arguments: assembleRelease
 
-      # Шаг 9: Сохраняем готовый файл для скачивания
+      # Шаг 10: Сохраняем готовый файл для скачивания
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
