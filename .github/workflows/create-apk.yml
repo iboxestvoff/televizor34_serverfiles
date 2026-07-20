@@ -1,0 +1,128 @@
+name: Build WebView APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Шаг 1: Скачиваем твой репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Шаг 2: Создаем структуру Android-проекта
+      - name: Generate Android Project Structure
+        run: |
+          mkdir -p app/src/main/java/ru/tv34/channels
+          mkdir -p app/src/main/res/layout
+
+      # Шаг 3: Создаем AndroidManifest.xml
+      - name: Create Android Manifest
+        run: |
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+              package="ru.tv34.channels">
+              <uses-permission android:name="android.permission.INTERNET" />
+              <application
+                  android:label="ТВ 34"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                  android:usesCleartextTraffic="true">
+                  <activity android:name=".MainActivity" android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+      # Шаг 4: Создаем разметку экрана с WebView
+      - name: Create Layout
+        run: |
+          cat << 'EOF' > app/src/main/res/layout/activity_main.xml
+          <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/webview"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" />
+          EOF
+
+      # Шаг 5: Пишем Java-код для загрузки ссылки телевизора
+      - name: Create MainActivity.java
+        run: |
+          cat << 'EOF' > app/src/main/java/ru/tv34/channels/MainActivity.java
+          package ru.tv34.channels;
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+
+          public class MainActivity extends Activity {
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  setContentView(R.layout.activity_main);
+                  WebView webView = findViewById(R.id.webview);
+                  WebSettings webSettings = webView.getSettings();
+                  webSettings.setJavaScriptEnabled(true);
+                  webSettings.setDomStorageEnabled(true);
+                  webView.setWebViewClient(new WebViewClient());
+                  webView.loadUrl("https://televizor34.onrender.com");
+              }
+          }
+          EOF
+
+      # Шаг 6: Создаем конфигурационные файлы Gradle
+      - name: Create Gradle Files
+        run: |
+          echo "include ':app'" > settings.gradle
+          
+          cat << 'EOF' > build.gradle
+          buildscript {
+              repositories { google(); mavenCentral() }
+              dependencies { classpath 'com.android.tools.build:gradle:8.2.2' }
+          }
+          allprojects {
+              repositories { google(); mavenCentral() }
+          }
+          EOF
+
+          cat << 'EOF' > app/build.gradle
+          plugins {
+              id 'com.android.application'
+          }
+          android {
+              namespace 'ru.tv34.channels'
+              compileSdk 34
+              defaultConfig {
+                  applicationId "ru.tv34.channels"
+                  minSdk 21
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+          }
+          EOF
+
+      # Шаг 7: Настраиваем Java окружение
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Шаг 8: Собираем проект с помощью официального экшена Gradle (он сам скачает Gradle 8.5)
+      - name: Setup and Run Gradle
+        uses: eskatos/gradle-command-action@v2
+        with:
+          gradle-version: '8.5'
+          arguments: assembleRelease
+
+      # Шаг 9: Сохраняем готовый файл для скачивания
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: tv34-release-apk
+          path: app/build/outputs/apk/release/*.apk
