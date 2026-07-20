@@ -7,26 +7,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Шаг 1: Скачиваем твой репозиторий
+      # Шаг 1: Скачиваем твой репозиторий (на всякий случай)
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Шаг 2: Клонируем сборщик во временную папку и переносим файлы
+      # Шаг 2: Клонируем сборщик в отдельную изолированную папку
       - name: Clone Webview Project
         run: |
-          git clone https://github.com/h5web/webview-app-creator.git temp_builder
-          mv temp_builder/* ./ 2>/dev/null || true
-          mv temp_builder/.[!.]* ./ 2>/dev/null || true
-          rm -rf temp_builder
+          git clone https://github.com/h5web/webview-app-creator.git builder
           
-      # Шаг 3: Записываем твои новые настройки (ТВ 34, ru.tv34.channels, URL)
+      # Шаг 3: Создаем конфигурацию прямо внутри папки сборщика
       - name: Configure App
         run: |
           echo '{
             "name": "ТВ 34",
             "url": "https://televizor34.onrender.com",
             "packageName": "ru.tv34.channels"
-          }' > config.json
+          }' > builder/config.json
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -34,13 +31,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # Шаг 4: Запускаем сборку прямо внутри рабочей папки сборщика
       - name: Build Release APK
         run: |
+          cd builder
           chmod +x gradlew
           ./gradlew assembleRelease
 
+      # Шаг 5: Забираем готовый APK из папки сборщика
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: tv34-release-apk
-          path: app/build/outputs/apk/release/*.apk
+          path: builder/app/build/outputs/apk/release/*.apk
