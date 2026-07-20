@@ -7,21 +7,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Шаг 1: Скачиваем твой репозиторий
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Шаг 2: Клонируем сборщик во временную папку и переносим файлы
       - name: Clone Webview Project
         run: |
-          git clone https://github.com/h5web/webview-app-creator.git .
+          git clone https://github.com/h5web/webview-app-creator.git temp_builder
+          mv temp_builder/* ./ 2>/dev/null || true
+          mv temp_builder/.[!.]* ./ 2>/dev/null || true
+          rm -rf temp_builder
           
+      # Шаг 3: Записываем твои новые настройки (ТВ 34, ru.tv34.channels, URL)
       - name: Configure App
         run: |
-          # Указываем ссылку на твой Render-сайт и название приложения
           echo '{
             "name": "ТВ 34",
             "url": "https://televizor34.onrender.com",
-            "packageName": "ru.televizor34.channels.monile"
+            "packageName": "ru.tv34.channels"
           }' > config.json
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -34,5 +42,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: televizor34-release-apk
+          name: tv34-release-apk
           path: app/build/outputs/apk/release/*.apk
