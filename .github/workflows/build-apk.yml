@@ -7,18 +7,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Шаг 1: Скачиваем твой собственный репозиторий
+      # Шаг 1: Скачиваем твой репозиторий
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Шаг 2: Создаем минимальную структуру Android-проекта с нуля
+      # Шаг 2: Создаем структуру Android-проекта
       - name: Generate Android Project Structure
         run: |
           mkdir -p app/src/main/java/ru/tv34/channels
           mkdir -p app/src/main/res/layout
-          mkdir -p app/src/main/res/values
 
-      # Шаг 3: Создаем AndroidManifest.xml (с доступом в интернет)
+      # Шаг 3: Создаем AndroidManifest.xml
       - name: Create Android Manifest
         run: |
           cat << 'EOF' > app/src/main/AndroidManifest.xml
@@ -49,7 +48,7 @@ jobs:
               android:layout_height="match_parent" />
           EOF
 
-      # Шаг 5: Пишем Java-код для загрузки твоей ссылки телевизора
+      # Шаг 5: Пишем Java-код для загрузки ссылки телевизора
       - name: Create MainActivity.java
         run: |
           cat << 'EOF' > app/src/main/java/ru/tv34/channels/MainActivity.java
@@ -75,18 +74,18 @@ jobs:
           }
           EOF
 
-      # Шаг 6: Создаем конфигурационные файлы сборщика Gradle
+      # Шаг 6: Создаем корректные конфигурационные файлы Gradle
       - name: Create Gradle Files
         run: |
           echo "include ':app'" > settings.gradle
           
           cat << 'EOF' > build.gradle
           buildscript {
-              repositories { google() \n mavenCentral() }
+              repositories { google(); mavenCentral() }
               dependencies { classpath 'com.android.tools.build:gradle:8.2.2' }
           }
           allprojects {
-              repositories { google() \n mavenCentral() }
+              repositories { google(); mavenCentral() }
           }
           EOF
 
@@ -114,12 +113,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Шаг 8: Скачиваем чистый Gradle-обертку и собираем APK
-      - name: Build APK
+      # Шаг 8: Скачиваем стабильный дистрибутив Gradle и собираем APK без локальной обертки
+      - name: Build APK with Gradle
         run: |
-          gradle wrapper --gradle-version 8.5
-          chmod +x gradlew
-          ./gradlew assembleRelease
+          sudo apt-get update && sudo apt-get install -y gradle
+          gradle assembleRelease
 
       # Шаг 9: Сохраняем готовый файл для скачивания
       - name: Upload APK
