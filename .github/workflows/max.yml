@@ -1,4 +1,4 @@
-name: MAX MESSENGER APKWEB
+name: MAX APK WEB TO TV
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Шаг 1: Check repositore GitHub
+      # Шаг 1: Скачиваем твой репозиторий (вместе с файлом icon.png)
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -22,7 +22,7 @@ jobs:
           mkdir -p app/src/main/res/mipmap-xxhdpi
           mkdir -p app/src/main/res/mipmap-xxxhdpi
 
-      # Шаг 3: Обрабатываем и устанавливаем иконку
+      # Шаг 3: Обрабатываем и устанавливаем иконку (если она есть)
       - name: Setup App Icon
         run: |
           if [ -f "icon.png" ]; then
@@ -42,10 +42,10 @@ jobs:
         run: |
           cat << 'EOF' > app/src/main/AndroidManifest.xml
           <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-              package="ru.max.tv">
+              package="ru.tv34.channels">
               <uses-permission android:name="android.permission.INTERNET" />
               <application
-                  android:label="MAX"
+                  android:label="ТВ 34"
                   android:icon="@mipmap/ic_launcher"
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
                   android:usesCleartextTraffic="true">
@@ -72,8 +72,8 @@ jobs:
       # Шаг 6: Пишем Java-код для загрузки ссылки телевизора
       - name: Create MainActivity.java
         run: |
-          cat << 'EOF' > app/src/main/java/ru/max/messenger/MainActivity.java
-          package ru.max.tv;
+          cat << 'EOF' > app/src/main/java/ru/tv34/channels/MainActivity.java
+          package ru.tv34.channels;
           import android.app.Activity;
           import android.os.Bundle;
           import android.webkit.WebSettings;
@@ -90,7 +90,7 @@ jobs:
                   webSettings.setJavaScriptEnabled(true);
                   webSettings.setDomStorageEnabled(true);
                   webView.setWebViewClient(new WebViewClient());
-                  webView.loadUrl("https://web.max.ru");
+                  webView.loadUrl("https://televizor34.onrender.com");
               }
           }
           EOF
@@ -115,10 +115,10 @@ jobs:
               id 'com.android.application'
           }
           android {
-              namespace 'ru.max.tv'
+              namespace 'ru.tv34.channels'
               compileSdk 34
               defaultConfig {
-                  applicationId "ru.max.tv"
+                  applicationId "ru.tv34.channels"
                   minSdk 21
                   targetSdk 34
                   versionCode 1
@@ -145,5 +145,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: maxtv-release-apk
+          name: tv34-release-apk
           path: app/build/outputs/apk/release/*.apk
