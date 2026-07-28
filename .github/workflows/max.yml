@@ -90,7 +90,7 @@ jobs:
                   webSettings.setJavaScriptEnabled(true);
                   webSettings.setDomStorageEnabled(true);
                   webView.setWebViewClient(new WebViewClient());
-                  webView.loadUrl("https://televizor34.onrender.com");
+                  webView.loadUrl("https://web.max.ru");
               }
           }
           EOF
